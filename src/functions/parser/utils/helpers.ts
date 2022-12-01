@@ -49,14 +49,7 @@ export const getM3uPlaylist = async () => {
       const resp =
         header.raw +
         "\n" +
-        items
-          .map(({ raw }) => {
-            return String.raw`${raw}`;
-
-            // console.log(raw);
-            // return raw.replace(/\\\r/g, '');
-          })
-          .join("\n");
+        items.map(({ raw }) => String.raw`${raw}`).join("\n");
 
       // Return this
       resolve(resp);
