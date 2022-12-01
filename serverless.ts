@@ -18,27 +18,31 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
     },
     timeout: 600,
-    iamRoleStatements: [
-      {
-        Effect: "Allow",
-        Action: ["s3:GetObject", "s3:PutObject"],
-        Resource: {
-          "Fn::Join": ["", ["arn:aws:s3:::", "m3u-parse-s3-bucket", "/*"]],
-        },
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: "Allow",
+            Action: ["s3:GetObject", "s3:PutObject"],
+            Resource: {
+              "Fn::Join": ["", ["arn:aws:s3:::", "m3u-parse-s3-bucket", "/*"]],
+            },
+          },
+          {
+            Effect: "Allow",
+            Action: ["s3:ListBucket"],
+            Resource: {
+              "Fn::Join": ["", ["arn:aws:s3:::", "m3u-parse-s3-bucket"]],
+            },
+          },
+          {
+            Effect: "Allow",
+            Action: ["ssm:GetParameter"],
+            Resource: "*",
+          },
+        ],
       },
-      {
-        Effect: "Allow",
-        Action: ["s3:ListBucket"],
-        Resource: {
-          "Fn::Join": ["", ["arn:aws:s3:::", "m3u-parse-s3-bucket"]],
-        },
-      },
-      {
-        Effect: "Allow",
-        Action: ["ssm:GetParameter"],
-        Resource: "*",
-      },
-    ],
+    },
   },
   // import the function via paths
   functions: { parser },
