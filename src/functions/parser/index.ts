@@ -4,7 +4,7 @@ export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
   events: [
     {
-      schedule: 'rate(15 minutes)'
+      schedule: 'rate(1 hour)'
     },
   ],
 };

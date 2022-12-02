@@ -11,7 +11,8 @@ const parser = async () => {
       Bucket: bucketName,
       Key: "tv.m3u",
       Body: m3uContent,
-      ContentType: 'application/octet-stream'
+      ContentType: 'application/octet-stream',
+      ACL: 'public-read'
     })
     .promise();
   return "parser passed";
