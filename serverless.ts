@@ -23,7 +23,13 @@ const serverlessConfiguration: AWS = {
         statements: [
           {
             Effect: "Allow",
-            Action: ["s3:GetObject", "s3:PutObject"],
+            Action: [
+              "s3:PutObject",
+              "s3:PutObjectAcl",
+              "s3:GetObject",
+              "s3:GetObjectAcl",
+              "s3:DeleteObject",
+            ],
             Resource: {
               "Fn::Join": ["", ["arn:aws:s3:::", "m3u-parse-s3-bucket", "/*"]],
             },

@@ -6,15 +6,18 @@ const parser = async () => {
   const bucketName = "m3u-parse-s3-bucket";
   const s3 = new S3();
 
+  console.log("Putting file");
   await s3
     .putObject({
       Bucket: bucketName,
-      Key: "tv.m3u",
+      Key: `tv.m3u`,
       Body: m3uContent,
-      ContentType: 'application/octet-stream',
-      ACL: 'public-read'
+      ContentType: "application/octet-stream",
+      ACL: "public-read",
     })
     .promise();
+
+  console.log("Put file");
   return "parser passed";
 };
 

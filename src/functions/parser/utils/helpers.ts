@@ -9,16 +9,21 @@ export const getM3uPlaylist = async () => {
       region: "us-east-1",
     });
 
+    console.log("Getting parameter");
     const {
       Parameter: { Value: url },
     } = await ssm
       .getParameter({ Name: "/m3uparser/kingiptv_url", WithDecryption: true })
       .promise();
 
+    console.log("Got parameter");
+
     const { data: stream } = await axios.get(url, {
       responseType: "stream",
       timeout: 30000,
     });
+
+    console.log("Got data");
 
     let output: string = "";
     stream.on("data", (data) => {
