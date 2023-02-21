@@ -2,28 +2,42 @@ import { includeGroupNamePatterns } from "./config";
 import * as m3uparser from "iptv-playlist-parser";
 import axios from "axios";
 import { SSM } from "aws-sdk";
+import {
+  AXIOS_TIMEOUT,
+  M3U_PLAYLIST_URL,
+  SSM_PARAMETER_NAME,
+  TARGET_AWS_REGION,
+} from "./env";
+
+const getM3UPlaylistURL = async () => {
+  if (M3U_PLAYLIST_URL) {
+    return M3U_PLAYLIST_URL;
+  }
+
+  const ssm = new SSM({
+    region: TARGET_AWS_REGION,
+  });
+
+  const {
+    Parameter: { Value: url },
+  } = await ssm
+    .getParameter({
+      Name: SSM_PARAMETER_NAME,
+      WithDecryption: true,
+    })
+    .promise();
+
+  return url;
+};
 
 export const getM3uPlaylist = async () => {
   return new Promise(async (resolve, reject) => {
-    const ssm = new SSM({
-      region: "us-east-1",
-    });
-
-    console.log("Getting parameter");
-    const {
-      Parameter: { Value: url },
-    } = await ssm
-      .getParameter({ Name: "/m3uparser/kingiptv_url", WithDecryption: true })
-      .promise();
-
-    console.log("Got parameter");
+    const url = await getM3UPlaylistURL();
 
     const { data: stream } = await axios.get(url, {
       responseType: "stream",
-      timeout: 30000,
+      timeout: AXIOS_TIMEOUT,
     });
-
-    console.log("Got data");
 
     let output: string = "";
     stream.on("data", (data) => {
